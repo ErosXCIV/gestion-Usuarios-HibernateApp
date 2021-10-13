@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.controladorHibernateApp">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <AnchorPane prefHeight="399.0" prefWidth="618.0" stylesheets="CSS/design.css">
+         <children>
+            <TextField fx:id="textFieldBuscar" layoutX="20.0" layoutY="28.0" onKeyReleased="#buscadorTabla" prefHeight="25.0" prefWidth="278.0" promptText="Búsqueda avanzada" />
+            <TableView fx:id="tableViewUsuarios" layoutX="20.0" layoutY="76.0" prefHeight="357.0" prefWidth="566.0">
+              <columns>
+                <TableColumn fx:id="columnNombre" prefWidth="188.0" text="Nombre" />
+                <TableColumn fx:id="columnEmail" prefWidth="188.0" text="Email" />
+                  <TableColumn fx:id="columnServicio" minWidth="0.0" prefWidth="187.0" text="Servicio" />
+                  <TableColumn fx:id="columnID" minWidth="0.0" prefWidth="0.0" text="ID" visible="false" />
+              </columns>
+            </TableView>
+            <Button fx:id="buttonModificar" layoutX="222.0" layoutY="455.0" mnemonicParsing="false" onAction="#modificarUsuario" prefHeight="25.0" prefWidth="161.0" text="Editar" />
+            <Button fx:id="buttonNuevo" layoutX="20.0" layoutY="455.0" mnemonicParsing="false" onAction="#nuevoUsuario" prefHeight="25.0" prefWidth="161.0" text="Nuevo" AnchorPane.leftAnchor="20.0" />
+            <Button id="buttonRefresh" fx:id="buttonRefresh" focusTraversable="false" layoutX="558.0" layoutY="48.0" mnemonicParsing="false" onAction="#refreshTabla" opacity="0.9" prefHeight="25.0" prefWidth="27.0" stylesheets="CSS/design.css" />
+            <ImageView fx:id="imageViewRefresh" fitHeight="24.0" fitWidth="24.0" layoutX="560.0" layoutY="48.5" mouseTransparent="true" opacity="0.9" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/icons8_refresh_32.png" />
+               </image></ImageView>
+            <Button fx:id="buttonEliminar" layoutX="424.0" layoutY="455.0" mnemonicParsing="false" onAction="#eliminarUsuario" prefHeight="25.0" prefWidth="161.0" text="Eliminar" />
+            <Button fx:id="generarInforme" layoutX="343.0" layoutY="28.0" mnemonicParsing="false" onAction="#generarInformePDF" prefHeight="25.0" prefWidth="161.0" text="Generar PDF">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Button>
+         </children></AnchorPane>
+   </children>
+</GridPane>
