@@ -17,6 +17,7 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import com.sun.javafx.font.FontConstants;
 import entity.FichausuariosEntity;
 import javafx.collections.ObservableList;
+import org.hibernate.engine.jdbc.ReaderInputStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,8 +30,8 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class GeneratePDFFileIText extends controladorHibernateApp {
-        public static final String DEST = "./results/informePDF.pdf";
-        public static final String DATOS = "C:\\Users\\Eros\\Desktop\\dataUsuarios.txt";
+        //public static final String DEST = "./results/informePDF.pdf";
+        //public static final String DATOS = "C:\\Users\\Eros\\Desktop\\dataUsuarios.txt";
         public static ObservableList observableList;
 
         public static void main(String[] args) throws IOException{
@@ -39,16 +40,18 @@ public class GeneratePDFFileIText extends controladorHibernateApp {
             new GeneratePDFFileIText().createPDF(DEST, observableList);
         }
 
-        public void createPDF(String destino, ObservableList<FichausuariosEntity> listado) throws IOException{
+        public void createPDF(String DEST, ObservableList<FichausuariosEntity> listado) throws IOException{
             // Convertir ObservableList listado a String
-            System.out.println(listado.toString() + "\n");
             ArrayList<String> listadoToList = new ArrayList<String>();
+
             for(int i =0 ; i < listado.size(); i++)
             {
                 listadoToList.add(listado.get(i).toString());
             }
-            System.out.println(listadoToList);
 
+            String listString = String.join(", ", listadoToList);
+
+            // Declaramos el destino del PDF
             FileOutputStream fileOutputStream = new FileOutputStream(DEST);
             PdfWriter pdfWriter = new PdfWriter(DEST);
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
@@ -60,13 +63,21 @@ public class GeneratePDFFileIText extends controladorHibernateApp {
 
             documento.add(new Paragraph("Lista de usuarios by Eros").setFont(coolveticaFont).setBold());
 
-            Table tabla = new Table(new float[]{3,5,3}); // número de columnas con su ancho, que es el tamaño del número
+            Table tabla = new Table(new float[]{1,3,6,3,3}); // número de columnas con su ancho, que es el tamaño del número
             //tabla.setWidth(100); // Le indico que debe utilizar el 100% de los márgenes
 
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(DATOS));
-            String linea = bufferedReader.readLine();
+            // Creamos File para que el BufferedReader lo lea
+            FileWriter datosTabla = new FileWriter("datosTabla.txt");
+            datosTabla.write(listString);
+            datosTabla.close();
 
-            procesoRellenarPDF(tabla, linea, coolveticaFont,true);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("datosTabla.txt"));
+
+            String linea = null;
+            String lineaHeader = "ID, Nombre, email, contraseña, Servicios";
+
+            // Llamamos a la función en dos tiempos
+            procesoRellenarPDF(tabla, lineaHeader, coolveticaFont,true);
 
             while ((linea = bufferedReader.readLine())!= null){
                 procesoRellenarPDF(tabla, linea, coolveticaFont, false);
@@ -89,7 +100,8 @@ public class GeneratePDFFileIText extends controladorHibernateApp {
         }
 
         public void procesoRellenarPDF(Table table, String lineaTexto, PdfFont fuente, boolean isHeader){
-            StringTokenizer tokenizer = new StringTokenizer(lineaTexto, ",");
+            StringTokenizer tokenizer = new StringTokenizer(lineaTexto, ",", false);
+
             while (tokenizer.hasMoreTokens()){
                 if (isHeader){
                     table.addHeaderCell(new Cell().add(new Paragraph(tokenizer.nextToken()).setFont(fuente)).setBold());
